@@ -805,23 +805,20 @@ yamlConfigFileGetNodeAtPathMappingOrSequenceLength(
 //
 
 bool
-yamlConfigFileCoerceScalarAtPath(
+__yamlConfigFileCoerceScalar(
     yamlConfigFileRef           aConfigFile,
     yamlKeyPathRef              theKeyPath,
     yaml_node_t                 *relativeToNode,
     yamlErrorCode               *outError,
     yamlKeyPathNodeMatchType*   *failedAtMatchElement,
     yamlConfigFileCoerceToType  coerceToType,
-    ...
+    va_list                     vargs
 )
 {
     yaml_node_t                 *targetNode = yamlConfigFileGetNodeAtPath(aConfigFile, theKeyPath, relativeToNode, outError, failedAtMatchElement);
     
     if ( targetNode ) {
         if ( targetNode->type == YAML_SCALAR_NODE ) {
-            va_list                 vargs;
-            
-            va_start(vargs, coerceToType);
             switch ( coerceToType ) {
                 
                 case yamlConfigFileCoerceToType_cstring: {
@@ -1118,7 +1115,61 @@ yamlConfigFileCoerceScalarAtPath(
 //
 
 bool
-yamlConfigFileCoerceSequenceAtPath(
+yamlConfigFileCoerceScalarAtPathString(
+    yamlConfigFileRef           aConfigFile,
+    const char                  *pathString,
+    size_t                      pathStringLen,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    const char*                 *outErrorAtChar,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+)
+{
+    bool                        okay = false;
+    yamlKeyPathRef              keyPath = yamlKeyPathCreateWithString(
+                                                pathString, pathStringLen,
+                                                YAMLCONFIGFILEOPTIONS_KEYPATHOPTIONS(aConfigFile->options),
+                                                outError, outErrorAtChar
+                                            );
+    if ( keyPath ) {
+        va_list                 vargs;
+        
+        va_start(vargs, coerceToType);
+        okay = __yamlConfigFileCoerceScalar(aConfigFile, keyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, vargs);
+        va_end(vargs);
+        yamlKeyPathRelease(keyPath);
+    }
+    return okay;
+}
+
+//
+
+bool
+yamlConfigFileCoerceScalarAtPath(
+    yamlConfigFileRef           aConfigFile,
+    yamlKeyPathRef              theKeyPath,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+)
+{
+    bool                        okay = false;
+    va_list                     vargs;
+        
+    va_start(vargs, coerceToType);
+    okay = __yamlConfigFileCoerceScalar(aConfigFile, theKeyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, vargs);
+    va_end(vargs);
+    return okay;
+}
+
+//
+
+bool
+__yamlConfigFileCoerceSequence(
     yamlConfigFileRef           aConfigFile,
     yamlKeyPathRef              theKeyPath,
     yaml_node_t                 *relativeToNode,
@@ -1127,7 +1178,7 @@ yamlConfigFileCoerceSequenceAtPath(
     unsigned int                startSequenceIndex,
     unsigned int                endSequenceIndex,
     yamlConfigFileCoerceToType  coerceToType,
-    ...
+    va_list                     vargs
 )
 {
     if ( startSequenceIndex <= endSequenceIndex ) {
@@ -1141,9 +1192,7 @@ yamlConfigFileCoerceSequenceAtPath(
                 if ( (startSequenceIndex < sequenceLength) && (endSequenceIndex < sequenceLength) ) {
                     yaml_node_item_t	*s = targetNode->data.sequence.items.start + startSequenceIndex;
                     yaml_node_item_t	*e = targetNode->data.sequence.items.start + endSequenceIndex + 1;
-                    va_list             vargs;
                     
-                    va_start(vargs, coerceToType);
                     switch ( coerceToType ) {
                         
                         case yamlConfigFileCoerceToType_bool: {
@@ -1614,6 +1663,64 @@ yamlConfigFileCoerceSequenceAtPath(
         }
     }
     return false;
+}
+
+//
+
+bool
+yamlConfigFileCoerceSequenceAtPathString(
+    yamlConfigFileRef           aConfigFile,
+    const char                  *pathString,
+    size_t                      pathStringLen,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    const char*                 *outErrorAtChar,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    unsigned int                startSequenceIndex,
+    unsigned int                endSequenceIndex,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+)
+{
+    bool                        okay = false;
+    yamlKeyPathRef              keyPath = yamlKeyPathCreateWithString(
+                                                pathString, pathStringLen,
+                                                YAMLCONFIGFILEOPTIONS_KEYPATHOPTIONS(aConfigFile->options),
+                                                outError, outErrorAtChar
+                                            );
+    if ( keyPath ) {
+        va_list                 vargs;
+        
+        va_start(vargs, coerceToType);
+        okay = __yamlConfigFileCoerceSequence(aConfigFile, keyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, startSequenceIndex, endSequenceIndex, vargs);
+        va_end(vargs);
+        yamlKeyPathRelease(keyPath);
+    }
+    return okay;
+}
+
+//
+
+bool
+yamlConfigFileCoerceSequenceAtPath(
+    yamlConfigFileRef           aConfigFile,
+    yamlKeyPathRef              theKeyPath,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    unsigned int                startSequenceIndex,
+    unsigned int                endSequenceIndex,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+)
+{
+    bool                        okay = false;
+    va_list                     vargs;
+        
+    va_start(vargs, coerceToType);
+    okay = __yamlConfigFileCoerceSequence(aConfigFile, theKeyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, startSequenceIndex, endSequenceIndex, vargs);
+    va_end(vargs);
+    return okay;
 }
 
 //

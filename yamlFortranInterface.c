@@ -11,30 +11,6 @@
 
 //
 
-#ifdef FORTRAN_INTEGER8
-#define YAMLFORTRANINTERFACE_INT_MAX	LONG_MAX
-#define YAMLFORTRANINTERFACE_INT_MIN	LONG_MIN
-typedef long int	yamlFortranInterfaceInteger;
-#else
-#define YAMLFORTRANINTERFACE_INT_MAX	INT_MAX
-#define YAMLFORTRANINTERFACE_INT_MIN	INT_MIN
-typedef int         yamlFortranInterfaceInteger;
-#endif
-
-#ifdef FORTRAN_LOGICAL8
-typedef long int    yamlFortranInterfaceLogical;
-#else
-typedef int         yamlFortranInterfaceLogical;
-#endif
-
-#ifdef FORTRAN_REAL8
-typedef double		yamlFortranInterfaceReal;
-#else
-typedef float		yamlFortranInterfaceReal;
-#endif
-
-//
-
 enum {
     yamlFortranInterfaceError_min = 300,
     yamlFortranInterfaceError_invalidUnit = yamlFortranInterfaceError_min,
