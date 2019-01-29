@@ -18,7 +18,7 @@ const char                  *yamlDocument =
                                 "      - H\n"
                                 "      - O\n"
                                 "    color-scheme: grayscale\n"
-                                "\n"
+                                "\n";
 
 int
 main(
