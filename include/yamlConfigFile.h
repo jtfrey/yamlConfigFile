@@ -92,6 +92,28 @@ enum {
 #define YAMLCONFIGFILEOPTIONS_KEYPATHOPTIONS(X)    (((X) & yamlConfigFileOptions_keyPathOptionMask) >> yamlConfigFileOptions_keyPathOptionShift)
 
 /*!
+    @function yamlConfigFileCreateWithInputString
+    Create a new YAML file wrapper using the contents of an in-memory string
+    buffer.  Since no filename is present in this form, the resulting
+    yamlConfigFile has an implied yamlConfigFileOptions_doNotCache option.
+ 
+    @param inputString
+        Character array containing the YAML document to be parsed
+    @param inputStringLength
+        Maximum number of characters to be parsed from inputString
+    @param options
+        Optional behaviors from the yamlConfigFileOptions enumeration
+ 
+    @return A newly-initialized yamlConfigFile, or NULL on error
+*/
+yamlConfigFileRef
+yamlConfigFileCreateWithInputString(
+    const char          *inputString,
+    size_t              inputStringLength,
+    yamlOptionsBitvec   options
+);
+
+/*!
     @function yamlConfigFileCreateWithFilePointer
     Create a new YAML file wrapper using an open file stream.  Since no
     filename is present in this form, the resulting yamlConfigFile has an
@@ -579,6 +601,31 @@ yamlConfigFileCoerceScalarAtPath(
 );
 
 /*!
+    @function yamlConfigFileCoerceScalarAtPathString
+    A convenience function that behaves like yamlConfigFileCoerceScalarAtPath
+    but handles compilation of the key path string itself.
+    
+    The key is compiled using the key path options that were passed to
+    aConfigFile when it was created.
+    
+    @param outErrorAtChar
+        If not NULL and a key path compilation error occurs, points to the
+        bad character in pathString
+*/
+bool
+yamlConfigFileCoerceScalarAtPathString(
+    yamlConfigFileRef           aConfigFile,
+    const char                  *pathString,
+    size_t                      pathStringLen,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    const char*                 *outErrorAtChar,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+);
+
+/*!
     @function yamlConfigFileCoerceSequenceAtPath
     Starting from an arbitrary node in the YAML document wrapped by aConfigFile,
     traverse the key path in theKeyPath.  If a node is found and is a YAML
@@ -621,6 +668,33 @@ yamlConfigFileCoerceSequenceAtPath(
     yamlKeyPathRef              theKeyPath,
     yaml_node_t                 *relativeToNode,
     yamlErrorCode               *outError,
+    yamlKeyPathNodeMatchType*   *failedAtMatchElement,
+    unsigned int                startSequenceIndex,
+    unsigned int                endSequenceIndex,
+    yamlConfigFileCoerceToType  coerceToType,
+    ...
+);
+
+/*!
+    @function yamlConfigFileCoerceSequenceAtPathString
+    A convenience function that behaves like yamlConfigFileCoerceSequenceAtPath
+    but handles compilation of the key path string itself.
+    
+    The key is compiled using the key path options that were passed to
+    aConfigFile when it was created.
+    
+    @param outErrorAtChar
+        If not NULL and a key path compilation error occurs, points to the
+        bad character in pathString
+*/
+bool
+yamlConfigFileCoerceSequenceAtPathString(
+    yamlConfigFileRef           aConfigFile,
+    const char                  *pathString,
+    size_t                      pathStringLen,
+    yaml_node_t                 *relativeToNode,
+    yamlErrorCode               *outError,
+    const char*                 *outErrorAtChar,
     yamlKeyPathNodeMatchType*   *failedAtMatchElement,
     unsigned int                startSequenceIndex,
     unsigned int                endSequenceIndex,

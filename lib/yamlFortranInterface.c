@@ -11,26 +11,10 @@
 
 //
 
-#ifdef FORTRAN_INTEGER8
-#define YAMLFORTRANINTERFACE_INT_MAX	LONG_MAX
-#define YAMLFORTRANINTERFACE_INT_MIN	LONG_MIN
-typedef long int	yamlFortranInterfaceInteger;
+#ifdef FORTRAN_NO_UNDERSCORING
+# define YAMLFORTRANINTERFACE_FORTRAN_API(S)    S
 #else
-#define YAMLFORTRANINTERFACE_INT_MAX	INT_MAX
-#define YAMLFORTRANINTERFACE_INT_MIN	INT_MIN
-typedef int         yamlFortranInterfaceInteger;
-#endif
-
-#ifdef FORTRAN_LOGICAL8
-typedef long int    yamlFortranInterfaceLogical;
-#else
-typedef int         yamlFortranInterfaceLogical;
-#endif
-
-#ifdef FORTRAN_REAL8
-typedef double		yamlFortranInterfaceReal;
-#else
-typedef float		yamlFortranInterfaceReal;
+# define YAMLFORTRANINTERFACE_FORTRAN_API(S)    S ## _
 #endif
 
 //
@@ -73,7 +57,7 @@ __yamlFortranInterfaceQuickKeyPathString(
 //
 
 void
-yamlconfigfile_open_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_open)(
 	const char                  *filename,
 	yamlFortranInterfaceInteger	*yamlUnit,
 	yamlFortranInterfaceInteger	filenameLength
@@ -104,7 +88,7 @@ yamlconfigfile_open_(
 //
 
 void
-yamlconfigfile_close_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_close)(
 	yamlFortranInterfaceInteger *yamlUnit
 )
 {
@@ -116,7 +100,7 @@ yamlconfigfile_close_(
 //
 
 void
-yamlconfigfile_closeall_()
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_closeall)()
 {
 	yamlConfigFileCacheFlush();
 }
@@ -222,7 +206,7 @@ __yamlFortranInterfacePrintKeyPathUsageError(
 //
 
 yamlFortranInterfaceLogical
-yamlConfigFile_getnodeistype_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlConfigFile_getnodeistype)(
     yamlFortranInterfaceInteger *yamlUnit,
     const char                  *keyPath,
     const char                  *type,
@@ -277,7 +261,7 @@ yamlConfigFile_getnodeistype_(
 //
 
 yamlFortranInterfaceInteger
-yamlconfigfile_getnodecollectionsize_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getnodecollectionsize)(
     yamlFortranInterfaceInteger *yamlUnit,
     const char                  *keyPath,
     yamlFortranInterfaceInteger *ierr,
@@ -368,7 +352,7 @@ __yamlFortranInterfaceSummaryPrintEnumerator(
 }
 
 void
-yamlconfigfile_summary_()
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_summary)()
 {
 	struct yamlFortranInterfaceSummaryPreprocess    preproc = { 0, 0 };
     
@@ -407,7 +391,7 @@ yamlconfigfile_summary_()
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getstring_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getstring)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     char                            *value,
@@ -503,7 +487,7 @@ yamlconfigfile_getstring_(
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getinteger_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getinteger)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *value,
@@ -519,7 +503,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(int32, int32_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getinteger4_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getinteger4)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     int32_t                         *value,
@@ -531,7 +515,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(int32, int32_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getinteger8_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getinteger8)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     int64_t                         *value,
@@ -543,7 +527,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(int64, int64_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getreal_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getreal)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceReal        *value,
@@ -559,7 +543,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(float, float)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getreal4_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getreal4)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     float                           *value,
@@ -571,7 +555,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(float, float)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getreal8_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getreal8)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     double                          *value,
@@ -583,7 +567,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(double, double)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getdoubleprecision_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getdoubleprecision)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     double                          *value,
@@ -595,7 +579,7 @@ YAMLFORTRANINTERFACE_GET_BOILERPLATE(double, double)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getlogical_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogical)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceLogical     *value,
@@ -690,7 +674,7 @@ yamlconfigfile_getlogical_(
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getintegerarray_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getintegerarray)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -708,7 +692,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(int32, int32_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getinteger4array_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getinteger4array)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -722,7 +706,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(int32, int32_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getinteger8array_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getinteger8array)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -736,7 +720,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(int64, int64_t)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getrealarray_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getrealarray)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -754,7 +738,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(float, float)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getreal4array_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getreal4array)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -768,7 +752,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(float, float)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getreal8array_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getreal8array)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -782,7 +766,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(double, double)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getdoubleprecisionarray_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getdoubleprecisionarray)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,
@@ -796,7 +780,7 @@ YAMLFORTRANINTERFACE_GETARRAY_BOILERPLATE(double, double)
 //
 
 yamlFortranInterfaceLogical
-yamlconfigfile_getlogicalarray_(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogicalarray)(
     yamlFortranInterfaceInteger     *yamlUnit,
     const char                      *keyPath,
     yamlFortranInterfaceInteger     *startIndex,

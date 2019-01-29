@@ -75,3 +75,4 @@ LOGICAL         :: YAMLConfigFile_GetReal4Array
 LOGICAL         :: YAMLConfigFile_GetReal8Array
 LOGICAL         :: YAMLConfigFile_GetDoublePrecisionArray
 LOGICAL         :: YAMLConfigFile_GetLogicalArray
+
