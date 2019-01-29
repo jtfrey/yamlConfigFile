@@ -8,29 +8,19 @@ PROJECT (YAMLConfigFile VERSION 0.1 LANGUAGES C)
 # locations on all platforms.
 INCLUDE(GNUInstallDirs)
 
-INCLUDE(CheckFunctionExists)
-
 # Add our local modlues to the module path
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-FIND_PACKAGE(libyaml REQUIRED)
+# Make the demo executables an optional build component:
+OPTION(ENABLE_DEMO_PROGRAMS "Build demonstration programs" OFF)
 
-# The source make use of strncasecmp and strncpy, so let's be sure they're present:
-CHECK_FUNCTION_EXISTS(strncasecmp HAVE_STRNCASECMP)
-CHECK_FUNCTION_EXISTS(strncpy HAVE_STRNCPY)
+# Common headers are found here:
+SET(COMMON_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+INCLUDE_DIRECTORIES(${COMMON_HEADERS_DIR})
 
-# Make all variable substitutions and generate config.h:
-CONFIGURE_FILE(yamlBaseTypes.h.in yamlBaseTypes.h)
+# The library itself:
+ADD_SUBDIRECTORY(lib)
 
-# libyamlConfigFile.so
-ADD_LIBRARY(libyamlConfigFile SHARED yamlBaseTypes.c yamlKeyPath.c yamlConfigFile.c yamlFortranInterface.c)
-SET_TARGET_PROPERTIES(libyamlConfigFile PROPERTIES OUTPUT_NAME yamlConfigFile)
-SET_TARGET_PROPERTIES(libyamlConfigFile PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_BINARY_DIR}/yamlBaseTypes.h;yamlKeyPath.h;yamlConfigFile.h;yamlFortranInterface-f.h")
-TARGET_INCLUDE_DIRECTORIES(libyamlConfigFile PUBLIC ${LIBYAML_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
-TARGET_LINK_LIBRARIES(libyamlConfigFile ${LIBYAML_LIBRARIES})
-
-# What does "make install" do?
-INSTALL(TARGETS libyamlConfigFile
-		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+IF (ENABLE_DEMO_PROGRAMS)
+	ADD_SUBDIRECTORY(demos)
+ENDIF (ENABLE_DEMO_PROGRAMS)

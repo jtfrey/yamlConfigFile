@@ -524,6 +524,39 @@ __yamlConfigFileCreate(
 //
 
 yamlConfigFileRef
+yamlConfigFileCreateWithInputString(
+    const char          *inputString,
+    size_t              inputStringLength,
+    yamlOptionsBitvec   options
+)
+{
+    yamlConfigFileRef   newConfigFile = NULL;
+    yaml_parser_t       parser;
+
+    // Initialize parser:
+    if ( yaml_parser_initialize(&parser) ) {
+        // Attach our input string:
+        if ( inputStringLength == yamlCStringFullLength ) inputStringLength = strlen(inputString);
+        yaml_parser_set_input_string(&parser, (const unsigned char*)inputString, inputStringLength);
+        
+        newConfigFile = __yamlConfigFileAlloc(NULL, options | yamlConfigFileOptions_doNotCache);
+        if ( newConfigFile ) {
+            // Attempt to parse the document:
+            if ( yaml_parser_load(&parser, &newConfigFile->document) ) {
+                newConfigFile->state = yamlConfigFileState_isDocumentParsed;
+            } else {
+                yamlConfigFileRelease(newConfigFile);
+                newConfigFile = NULL;
+            }
+        }
+        yaml_parser_delete(&parser);
+    }
+    return newConfigFile;
+}
+
+//
+
+yamlConfigFileRef
 yamlConfigFileCreateWithFilePointer(
     FILE                *sourceFilePtr,
     yamlOptionsBitvec   options
@@ -705,7 +738,7 @@ yamlConfigFileGetNodeAtPathContentString(
     
     if ( targetNode ) {
         if ( targetNode->type == YAML_SCALAR_NODE ) {
-            *contentString = targetNode->data.scalar.value;
+            *contentString = (const char*)targetNode->data.scalar.value;
             *contentStringLength = targetNode->data.scalar.length;
             success = true;
         } else {
@@ -833,7 +866,7 @@ __yamlConfigFileCoerceScalar(
                                 memcpy(buffer, targetNode->data.scalar.value, targetNode->data.scalar.length);
                                 buffer[targetNode->data.scalar.length] = '\0';
                             } else {
-                                strncpy(buffer, targetNode->data.scalar.value, copyLen);
+                                strncpy(buffer, (const char*)targetNode->data.scalar.value, copyLen);
                             }
                         }
                         *bufferLen = targetNode->data.scalar.length;
@@ -1692,7 +1725,7 @@ yamlConfigFileCoerceSequenceAtPathString(
         va_list                 vargs;
         
         va_start(vargs, coerceToType);
-        okay = __yamlConfigFileCoerceSequence(aConfigFile, keyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, startSequenceIndex, endSequenceIndex, vargs);
+        okay = __yamlConfigFileCoerceSequence(aConfigFile, keyPath, relativeToNode, outError, failedAtMatchElement, startSequenceIndex, endSequenceIndex, coerceToType, vargs);
         va_end(vargs);
         yamlKeyPathRelease(keyPath);
     }
@@ -1718,7 +1751,7 @@ yamlConfigFileCoerceSequenceAtPath(
     va_list                     vargs;
         
     va_start(vargs, coerceToType);
-    okay = __yamlConfigFileCoerceSequence(aConfigFile, theKeyPath, relativeToNode, outError, failedAtMatchElement, coerceToType, startSequenceIndex, endSequenceIndex, vargs);
+    okay = __yamlConfigFileCoerceSequence(aConfigFile, theKeyPath, relativeToNode, outError, failedAtMatchElement, startSequenceIndex, endSequenceIndex, coerceToType, vargs);
     va_end(vargs);
     return okay;
 }

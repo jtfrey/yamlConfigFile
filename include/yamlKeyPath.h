@@ -145,8 +145,7 @@ yamlKeyPathCreate(
     @param keyPathString
         The key path string to compile
     @param keyPathStringLength
-        The length of the key path string or 0 to imply a NUL-terminated
-        C string
+        The length of the key path string
     @param options
         Optional behaviors for the compilation
     @param outError
@@ -251,6 +250,26 @@ yamlKeyPathGetNextNodeMatch(
     yamlKeyPathNodeMatchType    *matchingElement
 );
 
+
+/*!
+    @define YAMLKEYPATH_NODEMATCH_FPRINTF
+    Macro that expands to a loop that walks node match element M and
+    all its children, printing the key path they represent to file
+    stream S.  No leading or trailing whitespace (including terminating
+    <NL> characters) is printed to the file stream.
+*/
+#define YAMLKEYPATH_NODEMATCH_FPRINTF(S, M) { \
+        yamlKeyPathNodeMatchType    *__m__ = (M); \
+        FILE                        *__s__ = (S); \
+        while (__m__) { \
+            switch (__m__->type) { \
+                case YAML_SEQUENCE_NODE: fprintf(__s__, "[%d]", __m__->parameter.index); break; \
+                case YAML_MAPPING_NODE: fprintf(__s__, ".%s", __m__->parameter.key); break; \
+            } \
+            __m__ = yamlKeyPathGetNextNodeMatch(__m__); \
+        } \
+    } while (0)
+            
 
 /*!
     @typedef yamlKeyPathNodeMatchEnumerator

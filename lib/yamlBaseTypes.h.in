@@ -48,6 +48,15 @@ enum {
     yamlOptions_none = 0
 };
 
+
+/*!
+    @define yamlCStringFullLength
+    Special value used to indicate a NUL-terminated C string whose
+    full length should be used by a function. 
+*/
+#define yamlCStringFullLength   ((size_t)-1)
+
+
 #cmakedefine FORTRAN_INTEGER8 @FORTRAN_INTEGER8@
 #cmakedefine FORTRAN_LOGICAL8 @FORTRAN_LOGICAL8@
 #cmakedefine FORTRAN_REAL8 @FORTRAN_REAL8@

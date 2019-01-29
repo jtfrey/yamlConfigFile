@@ -81,7 +81,7 @@ yamlKeyPathNodeMatchPrivateAllocMappingKey(
     if ( ! key ) {
         keyLength = 0;
     }
-    else if ( keyLength == 0 ) {
+    else if ( keyLength == yamlCStringFullLength ) {
         keyLength = strlen(key);
     }
     newMatch = malloc(sizeof(yamlKeyPathNodeMatchPrivateType) + keyLength + (key ? 1 : 0));
@@ -242,7 +242,7 @@ yamlKeyPathCreateWithString(
     bool                                atRoot = true;
     const char                          *start = keyPathString, *end = keyPathString;
     
-    if ( (keyPathStringLength == 0) && keyPathString ) keyPathStringLength = strlen(keyPathString);
+    if ( (keyPathStringLength == yamlCStringFullLength) && keyPathString ) keyPathStringLength = strlen(keyPathString);
     
     if ( outErrorAtChar ) *outErrorAtChar = NULL;
     

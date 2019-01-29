@@ -92,6 +92,28 @@ enum {
 #define YAMLCONFIGFILEOPTIONS_KEYPATHOPTIONS(X)    (((X) & yamlConfigFileOptions_keyPathOptionMask) >> yamlConfigFileOptions_keyPathOptionShift)
 
 /*!
+    @function yamlConfigFileCreateWithInputString
+    Create a new YAML file wrapper using the contents of an in-memory string
+    buffer.  Since no filename is present in this form, the resulting
+    yamlConfigFile has an implied yamlConfigFileOptions_doNotCache option.
+ 
+    @param inputString
+        Character array containing the YAML document to be parsed
+    @param inputStringLength
+        Maximum number of characters to be parsed from inputString
+    @param options
+        Optional behaviors from the yamlConfigFileOptions enumeration
+ 
+    @return A newly-initialized yamlConfigFile, or NULL on error
+*/
+yamlConfigFileRef
+yamlConfigFileCreateWithInputString(
+    const char          *inputString,
+    size_t              inputStringLength,
+    yamlOptionsBitvec   options
+);
+
+/*!
     @function yamlConfigFileCreateWithFilePointer
     Create a new YAML file wrapper using an open file stream.  Since no
     filename is present in this form, the resulting yamlConfigFile has an
