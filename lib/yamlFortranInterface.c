@@ -206,7 +206,7 @@ __yamlFortranInterfacePrintKeyPathUsageError(
 //
 
 yamlFortranInterfaceLogical
-YAMLFORTRANINTERFACE_FORTRAN_API(yamlConfigFile_getnodeistype)(
+YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getnodeistype)(
     yamlFortranInterfaceInteger *yamlUnit,
     const char                  *keyPath,
     const char                  *type,
