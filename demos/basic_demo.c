@@ -2,11 +2,23 @@
 #include "yamlConfigFile.h"
 
 const char                  *yamlDocument = 
+                                "general:\n"
+                                "    tolerance: 1.54e-2\n"
+                                "    uses-bfgs: on\n"
+                                "\n"
                                 "axes:\n"
+                                "    order: [x, y]\n"
                                 "    range:\n"
-                                "        x: [ -6.28319, +6.28319]\n"
-                                "        y: [ -3.14159, +3.14159]\n"
-                                "\n";
+                                "      x: [ -3.14159, +3.14159 ]\n"
+                                "      y: [ -6.28318, +6.28318 ]\n"
+                                "\n"
+                                "visualization:\n"
+                                "    include-elements:\n"
+                                "      - C\n"
+                                "      - H\n"
+                                "      - O\n"
+                                "    color-scheme: grayscale\n"
+                                "\n"
 
 int
 main(
