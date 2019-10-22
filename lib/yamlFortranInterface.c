@@ -243,14 +243,17 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getnodeistype)(
                             );
                 if ( errorCode != yamlError_none ) {
                     __yamlFortranInterfacePrintKeyPathUsageError("failed to traverse key path", errorCode, compiledKeyPath, failedAtMatchElement);
+                    *ierr = errorCode;
                 }
             } else {
                 errorCode = yamlFortranInterfaceError_invalidYAMLNodeTypeString;
                 fprintf(stderr, "[YAML::Fortran] not a valid YAML node type: %.*s (err = %d)\n", typeLen, type, errorCode);
+                *ierr = errorCode;
             }
             yamlKeyPathRelease(compiledKeyPath);
         } else {
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar);
+            *ierr = errorCode;
         }
     } else {
         *ierr = yamlFortranInterfaceError_invalidUnit;
@@ -296,9 +299,11 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getnodecollectionsize)(
                         );
             if ( ! okay && (errorCode != yamlError_none) ) {
                 __yamlFortranInterfacePrintKeyPathUsageError("failed to traverse key path", errorCode, compiledKeyPath, failedAtMatchElement);
+                *ierr = errorCode;
             }
         } else {
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar);
+            *ierr = errorCode;
         }
     } else {
         *ierr = yamlFortranInterfaceError_invalidUnit;
@@ -432,10 +437,12 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getstring)(
                 while ( tmpValueLen < valueLen ) value[tmpValueLen++] = ' ';
             } else {
                 __yamlFortranInterfacePrintKeyPathUsageError("failed to coerce value at path", errorCode, compiledKeyPath, failedAtMatchElement);
+                *ierr = errorCode;
             }
             yamlKeyPathRelease(compiledKeyPath);
         } else {
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar);
+            *ierr = errorCode;
         }
     } else {
         *ierr = yamlFortranInterfaceError_invalidUnit;
@@ -473,10 +480,12 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getstring)(
                         ); \
             if ( ! okay ) { \
                 __yamlFortranInterfacePrintKeyPathUsageError("failed to coerce value at path", errorCode, compiledKeyPath, failedAtMatchElement); \
+                *ierr = errorCode; \
             } \
             yamlKeyPathRelease(compiledKeyPath); \
         } else { \
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar); \
+            *ierr = errorCode; \
         } \
     } else { \
         *ierr = yamlFortranInterfaceError_invalidUnit; \
@@ -617,10 +626,12 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogical)(
                 *value = bval ? 1 : 0;
             } else {
                 __yamlFortranInterfacePrintKeyPathUsageError("failed to coerce value at path", errorCode, compiledKeyPath, failedAtMatchElement);
+                *ierr = errorCode;
             }
             yamlKeyPathRelease(compiledKeyPath);
         } else {
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar);
+            *ierr = errorCode;
         }
     } else {
         *ierr = yamlFortranInterfaceError_invalidUnit;
@@ -660,10 +671,12 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogical)(
                         ); \
             if ( ! okay ) { \
                 __yamlFortranInterfacePrintKeyPathUsageError("failed to coerce value at path", errorCode, compiledKeyPath, failedAtMatchElement); \
+                *ierr = errorCode; \
             } \
             yamlKeyPathRelease(compiledKeyPath); \
         } else { \
             __yamlFortranInterfacePrintKeyPathCompileError(errorCode, keyPath, keyPathLen, errorAtChar); \
+            *ierr = errorCode; \
         } \
     } else { \
         *ierr = yamlFortranInterfaceError_invalidUnit; \
@@ -855,6 +868,7 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogicalarray)(
                 fprintf(stderr, "at \"%.*s\" ", (keyPathLen - (errorAtChar - keyPath)), keyPath);
             }
             fprintf(stderr, "(err = %d)\n", errorCode);
+            *ierr = errorCode;
         }
     } else {
         *ierr = yamlFortranInterfaceError_invalidUnit;
