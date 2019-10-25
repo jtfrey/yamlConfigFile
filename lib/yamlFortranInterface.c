@@ -170,7 +170,7 @@ __yamlFortranInterfacePrintKeyPathCompileError(
 {
     fprintf(stderr, "[YAML::Fortran] failed to compile key path ");
     if ( errorAtChar ) {
-        fprintf(stderr, "at \"%.*s\" ", (keyPathLen - (errorAtChar - keyPath)), keyPath);
+        fprintf(stderr, "at \"%.*s\" ", (int)(keyPathLen - (errorAtChar - keyPath)), keyPath);
     }
     fprintf(stderr, "(err = %d)\n", errorCode);
 }
@@ -195,6 +195,10 @@ __yamlFortranInterfacePrintKeyPathUsageError(
                     break;
                 case YAML_MAPPING_NODE:
                     fprintf(stderr, ".%s", failedAtMatchElement->parameter.key);
+                    break;
+                case YAML_NO_NODE:
+                case YAML_SCALAR_NODE:
+                    /* Should never get here */
                     break;
             }
             failedAtMatchElement = yamlKeyPathGetNextNodeMatch(failedAtMatchElement);
@@ -247,7 +251,7 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getnodeistype)(
                 }
             } else {
                 errorCode = yamlFortranInterfaceError_invalidYAMLNodeTypeString;
-                fprintf(stderr, "[YAML::Fortran] not a valid YAML node type: %.*s (err = %d)\n", typeLen, type, errorCode);
+                fprintf(stderr, "[YAML::Fortran] not a valid YAML node type: %.*s (err = %d)\n", (int)typeLen, type, errorCode);
                 *ierr = errorCode;
             }
             yamlKeyPathRelease(compiledKeyPath);
@@ -855,6 +859,10 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogicalarray)(
                             case YAML_MAPPING_NODE:
                                 fprintf(stderr, ".%s", failedAtMatchElement->parameter.key);
                                 break;
+                            case YAML_NO_NODE:
+                            case YAML_SCALAR_NODE:
+                                /* Should never get here */
+                                break;
                         }
                         failedAtMatchElement = yamlKeyPathGetNextNodeMatch(failedAtMatchElement);
                     }
@@ -865,7 +873,7 @@ YAMLFORTRANINTERFACE_FORTRAN_API(yamlconfigfile_getlogicalarray)(
         } else {
             fprintf(stderr, "[YAML::Fortran] failed to compile key path ");
             if ( errorAtChar ) {
-                fprintf(stderr, "at \"%.*s\" ", (keyPathLen - (errorAtChar - keyPath)), keyPath);
+                fprintf(stderr, "at \"%.*s\" ", (int)(keyPathLen - (errorAtChar - keyPath)), keyPath);
             }
             fprintf(stderr, "(err = %d)\n", errorCode);
             *ierr = errorCode;
