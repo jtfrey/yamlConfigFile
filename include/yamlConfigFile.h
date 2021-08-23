@@ -26,7 +26,7 @@ enum {
     yamlConfigFileError_numberOutOfRange,
     yamlConfigFileError_invalidSequenceIndex,
     yamlConfigFileError_max
-} yamlConfigFileError;
+};
 
 /*!
     @define IS_YAMLCONFIGFILE_ERROR
