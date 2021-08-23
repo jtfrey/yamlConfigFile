@@ -440,7 +440,7 @@ typedef struct {
     Predefined yamlKeyPathCacheValueCallbacks structure containing callbacks
     that handle C strings.
 */
-const yamlKeyPathCacheValueCallbacks yamlKeyPathCacheValueCStringCallbacks;
+extern const yamlKeyPathCacheValueCallbacks yamlKeyPathCacheValueCStringCallbacks;
 
 
 /*!
